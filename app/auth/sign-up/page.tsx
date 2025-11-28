@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,8 +31,14 @@ export default function SignUpPage() {
       return
     }
 
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters")
+      setIsLoading(false)
+      return
+    }
+
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -41,7 +46,16 @@ export default function SignUpPage() {
         },
       })
       if (error) throw error
-      router.push("/auth/sign-up-success")
+
+      if (data.session) {
+        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        document.cookie = `sb-refresh-token=${data.session.refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
+        router.push("/dashboard")
+        router.refresh()
+      } else {
+        // Email confirmation required
+        router.push("/auth/sign-up-success")
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
@@ -61,7 +75,7 @@ export default function SignUpPage() {
           <Card className="border-border/50 bg-card/50 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-2xl text-foreground">Create account</CardTitle>
-              <CardDescription>Start your free trial today</CardDescription>
+              <CardDescription>Start your free trial with 3 credits</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSignUp}>
@@ -84,6 +98,7 @@ export default function SignUpPage() {
                       id="password"
                       type="password"
                       required
+                      minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="bg-background"

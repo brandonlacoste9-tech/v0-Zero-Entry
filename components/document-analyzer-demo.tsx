@@ -34,7 +34,11 @@ export function DocumentAnalyzerDemo() {
 
     try {
       const result = await analyzeDocument(sampleInvoice)
-      setExtractedData(result)
+      if (result.success && result.data) {
+        setExtractedData(result.data)
+      } else {
+        setError(result.error || "Failed to analyze document. Please try again.")
+      }
     } catch (err) {
       setError("Failed to analyze document. Please try again.")
       console.error(err)

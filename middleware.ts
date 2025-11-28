@@ -1,10 +1,21 @@
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function middleware(request: NextRequest) {
-  // Let all requests through - auth handled in individual pages
+  // Only run auth check on dashboard routes
+  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+    // Check for auth cookie
+    const accessToken = request.cookies.get("sb-access-token")?.value
+
+    if (!accessToken) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/auth/login"
+      return NextResponse.redirect(url)
+    }
+  }
+
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: ["/dashboard/:path*"],
 }

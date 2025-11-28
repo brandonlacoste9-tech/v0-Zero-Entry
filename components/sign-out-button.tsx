@@ -11,7 +11,12 @@ export function SignOutButton() {
   const handleSignOut = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
+
+    document.cookie = "sb-access-token=; path=/; max-age=0"
+    document.cookie = "sb-refresh-token=; path=/; max-age=0"
+
     router.push("/")
+    router.refresh()
   }
 
   return (
