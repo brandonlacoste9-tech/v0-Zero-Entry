@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Button } from "./ui/button"
 import { Check, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { trackPricingClick } from "@/lib/analytics"
 
 const pricingPlans = [
   {
@@ -128,12 +129,20 @@ export function PricingSection() {
                 asChild
               >
                 {plan.isExternal ? (
-                  <a href={plan.paymentLink} target="_blank" rel="noopener noreferrer">
-                    {plan.name === "Free" ? "Get Started Free" : "Start Free Trial"}
+                  <a
+                    href={plan.paymentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackPricingClick(plan.name.toLowerCase() as "pro" | "business", "pricing_section")}
+                  >
+                    Start Free Trial
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </a>
                 ) : (
-                  <Link href={plan.paymentLink}>
+                  <Link
+                    href={plan.paymentLink}
+                    onClick={() => trackPricingClick("free", "pricing_section")}
+                  >
                     Get Started Free
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>

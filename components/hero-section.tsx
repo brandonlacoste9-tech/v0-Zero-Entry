@@ -132,7 +132,16 @@ export function HeroSection() {
               className="border-gray-600 text-white hover:bg-gray-800 bg-transparent group"
               asChild
             >
-              <Link href="#demo">
+              <Link
+                href="#demo"
+                onClick={(e) => {
+                  e.preventDefault()
+                  const element = document.querySelector("#demo")
+                  if (element) {
+                    element.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
+                }}
+              >
                 <Play className="mr-2 h-4 w-4" />
                 Watch Demo
               </Link>

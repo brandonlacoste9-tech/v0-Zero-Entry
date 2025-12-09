@@ -1,5 +1,6 @@
 import { ZeroEntryLogo } from "./lelo-logo"
 import Link from "next/link"
+import { NewsletterSignup } from "./newsletter-signup"
 
 export function Footer() {
   return (
@@ -12,7 +13,11 @@ export function Footer() {
               AI-powered document processing that turns PDFs, invoices, and statements into clean, actionable
               spreadsheet data.
             </p>
-            <p className="text-sm text-white/50 italic">"Zero manual entry. 100% accuracy."</p>
+            <p className="text-sm text-white/50 italic mb-6">"Zero manual entry. 100% accuracy."</p>
+            <div>
+              <p className="text-sm text-white/70 mb-3 font-medium">Stay updated</p>
+              <NewsletterSignup />
+            </div>
           </div>
 
           <div>
@@ -24,7 +29,17 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-white transition-colors">
+                <Link
+                  href="#pricing"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const element = document.querySelector("#pricing")
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth", block: "start" })
+                    }
+                  }}
+                  className="hover:text-white transition-colors"
+                >
                   Pricing
                 </Link>
               </li>

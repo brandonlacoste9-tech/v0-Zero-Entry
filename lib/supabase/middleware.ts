@@ -1,10 +1,19 @@
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse, type NextRequest } from "next/server"
+import type { Database } from "./database.types"
 
 export async function updateSession(request: NextRequest) {
   const response = NextResponse.next({ request })
 
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("Missing Supabase environment variables")
+    return response
+  }
+
+  const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
   // Get tokens from cookies
   const accessToken = request.cookies.get("sb-access-token")?.value
