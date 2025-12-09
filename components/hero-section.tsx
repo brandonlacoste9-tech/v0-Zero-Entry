@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "./ui/button"
 import { ArrowRight, Play } from "lucide-react"
 import { ParticleTextEffect } from "./particle-text-effect"

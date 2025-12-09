@@ -1,3 +1,5 @@
+"use client"
+
 import { ZeroEntryLogo } from "./lelo-logo"
 import Link from "next/link"
 import { NewsletterSignup } from "./newsletter-signup"
